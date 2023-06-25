@@ -13,9 +13,9 @@ namespace EldewritoTickrateChanger
         private const uint OriginalTickRate = 60;
         private const float OriginalTickTime = 1 / 60.0f;
         private readonly CancellationTokenSource _tokens = new CancellationTokenSource();
-
+        private IntPtr _engineTickTimeAddress = IntPtr.Zero;
+        private IntPtr _timePerTickAddress = IntPtr.Zero;
         private Process _mccProcess;
-
         private bool _oldStatus;
 
         public Form1()
@@ -65,8 +65,11 @@ namespace EldewritoTickrateChanger
         {
             using (var memory = new Memory(_mccProcess))
             {
-                var ptr = memory.GetAddress("\"halo3.dll\"+02012630+498+C8+4");
-                return memory.ReadUInt32(ptr);
+                if (_engineTickTimeAddress == IntPtr.Zero)
+                {
+                    _engineTickTimeAddress = memory.GetAddress("\"halo3.dll\"+02012630+498+C8+4");
+                }
+                return memory.ReadUInt32(_engineTickTimeAddress);
             }
         }
 
@@ -74,8 +77,18 @@ namespace EldewritoTickrateChanger
         {
             using (var memory = new Memory(_mccProcess))
             {
-                var ptr = memory.GetAddress("\"halo3.dll\"+02012630+498+C8+4");
-                memory.WriteUInt32(ptr, toWrite);
+                try
+                {
+                    if (_engineTickTimeAddress == IntPtr.Zero)
+                    {
+                        _engineTickTimeAddress = memory.GetAddress("\"halo3.dll\"+02012630+498+C8+4");
+                    }
+                    memory.WriteUInt32(_engineTickTimeAddress, toWrite);
+                }
+                catch (Exception)
+                {
+                    _engineTickTimeAddress = IntPtr.Zero; // Reset the cached address
+                }
             }
         }
 
@@ -83,8 +96,11 @@ namespace EldewritoTickrateChanger
         {
             using (var memory = new Memory(_mccProcess))
             {
-                var ptr = memory.GetAddress("\"halo3.dll\"+02012630+498+C8+8");
-                return memory.ReadFloat(ptr);
+                if (_timePerTickAddress == IntPtr.Zero)
+                {
+                    _timePerTickAddress = memory.GetAddress("\"halo3.dll\"+02012630+498+C8+8");
+                }
+                return memory.ReadFloat(_timePerTickAddress);
             }
         }
 
@@ -92,8 +108,18 @@ namespace EldewritoTickrateChanger
         {
             using (var memory = new Memory(_mccProcess))
             {
-                var ptr = memory.GetAddress("\"halo3.dll\"+02012630+498+C8+8");
-                memory.WriteFloat(ptr, toWrite);
+                try
+                {
+                    if (_timePerTickAddress == IntPtr.Zero)
+                    {
+                        _timePerTickAddress = memory.GetAddress("\"halo3.dll\"+02012630+498+C8+8");
+                    }
+                    memory.WriteFloat(_timePerTickAddress, toWrite);
+                }
+                catch (Exception)
+                {
+                    _timePerTickAddress = IntPtr.Zero; // Reset the cached address
+                }
             }
         }
 
