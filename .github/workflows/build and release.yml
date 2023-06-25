@@ -36,6 +36,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./EldewritoTickrateChanger/bin/x64/Release/Halo3Tickrate-ifier.exe
+        asset_path: EldewritoTickrateChanger/bin/Release/Halo3Tickrate-ifier.exe
         asset_name: Halo3Tickrate-ifier.exe
         asset_content_type: application/octet-stream
