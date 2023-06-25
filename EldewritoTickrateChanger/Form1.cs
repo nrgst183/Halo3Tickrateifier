@@ -161,15 +161,17 @@ namespace EldewritoTickrateChanger
 
         private void SetTickRate(bool is30)
         {
-            if (is30)
+            uint expectedTickRate = is30 ? 30 : OriginalTickRate;
+            float expectedTimePerTick = is30 ? 1 / 30.0f : OriginalTickTime;
+
+            if (TickRate != expectedTickRate)
             {
-                TickRate = 30;
-                TimePerTick = 1 / 30.0f;
+                TickRate = expectedTickRate;
             }
-            else
+
+            if (Math.Abs(TimePerTick - expectedTimePerTick) > 0.0001f)
             {
-                TickRate = OriginalTickRate;
-                TimePerTick = OriginalTickTime;
+                TimePerTick = expectedTimePerTick;
             }
         }
 
