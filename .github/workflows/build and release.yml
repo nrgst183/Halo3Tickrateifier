@@ -5,7 +5,6 @@ on:
     branches:
       - master
 
-
 jobs:
   build:
     runs-on: windows-2019
@@ -26,8 +25,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.sha }}
-        release_name: Release ${{ github.sha }}
+        tag_name: release-${{ github.run_id }}
+        release_name: Release ${{ github.run_id }}
         draft: false
         prerelease: false
 
